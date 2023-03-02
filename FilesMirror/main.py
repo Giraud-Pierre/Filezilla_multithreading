@@ -7,7 +7,7 @@ from get_parameters import get_user_parameters
 if len(sys.argv) == 1:
     current_dir = os.path.realpath(os.path.dirname(__file__))
     local_dir = current_dir[:-11] + "FTPServerLocal"
-    sys.argv.extend(("localhost,test,test,/test,21", local_dir, "2", "30",))
+    sys.argv.extend(("localhost,test,test,/test,21", local_dir, "2", "30", "0", "5", ))
 
 if __name__ == "__main__":
     # get parameters from command line

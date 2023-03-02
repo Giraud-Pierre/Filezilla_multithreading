@@ -12,8 +12,8 @@ def get_user_parameters():
     parser.add_argument("local_directory", help="Directory we want to synchronize", type=str)
     parser.add_argument("max_depth", help="Maximal depth to synchronize starting from the root directory", type=int)
     parser.add_argument("refresh_frequency", help="Refresh frequency to synchronize with FTP server (in seconds)", type=int)
-    parser.add_argument("is_multithreading", help="Do you want to use multithreading", type=bool)
-    parser.add_argument("nb_threads", help="Maximum number of threads at the same time", type=int)
+    parser.add_argument("is_multithreading", help="Do you want to use multithreading ? 0 for no, 1 for yes", type=int, default = False)
+    parser.add_argument("nb_threads", help="Maximum number of threads at the same time", type=int, default = 0)
     parser.add_argument("excluded_extensions", nargs='*', help="List of the extensions to excluded when synchronizing (optional)",
                         type=str, default=[])
     # nargs = '*' : the last argument take zero or more parameter
