@@ -43,6 +43,7 @@ class DirectoryManagerMultithreading:
         self.ftp.disconnect()
 
     def synchronize_directory(self, frequency):
+        start=time.time()
         print("synchronize_directory multithreading")
         while True:
             # init the path explored to an empty list before each synchronization
@@ -58,7 +59,7 @@ class DirectoryManagerMultithreading:
             self.ftp.connect()
             self.any_removals()
             self.ftp.disconnect()
-
+            print(time.time()-start)   
             # wait before next synchronization
             time.sleep(frequency)
 

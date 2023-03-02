@@ -37,6 +37,7 @@ class DirectoryManager:
 
     def synchronize_directory(self, frequency):
         while True:
+            start=time.time()
             # init the path explored to an empty list before each synchronization
             self.paths_explored = []
 
@@ -50,7 +51,7 @@ class DirectoryManager:
             # look for any removals of files / directories
             self.any_removals()
             self.ftp.disconnect()
-
+            print(time.time()-start)  
             # wait before next synchronization
             time.sleep(frequency)
 
