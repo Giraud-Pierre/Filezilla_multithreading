@@ -29,17 +29,18 @@ class DirectoryManagerMultithreading:
         # of the synchronization
         self.to_remove_from_dict = []
         # FTP instances
-        self.ftp = [TalkToFTP(ftp_website) for _ in range(nb_threads)]
+        self.ftp = TalkToFTP(ftp_website)
+        self.ftp_multithreading = [TalkToFTP(ftp_website) for _ in range(nb_threads)]
         # create the directory on the FTP if not already existing
-        self.ftp[0].connect()
-        if self.ftp[0].directory.count(os.path.sep) == 0:
+        self.ftp.connect()
+        if self.ftp.directory.count(os.path.sep) == 0:
             # want to create folder at the root of the server
             directory_split = ""
         else:
-            directory_split = self.ftp[0].directory.rsplit(os.path.sep, 1)[0]
-        if not self.ftp[0].if_exist(self.ftp[0].directory, self.ftp[0].get_folder_content(directory_split)):
-            self.ftp[0].create_folder(self.ftp[0].directory)
-        self.ftp[0].disconnect()
+            directory_split = self.ftp.directory.rsplit(os.path.sep, 1)[0]
+        if not self.ftp.if_exist(self.ftp.directory, self.ftp.get_folder_content(directory_split)):
+            self.ftp.create_folder(self.ftp.directory)
+        self.ftp.disconnect()
 
     def synchronize_directory(self, frequency):
         print("synchronize_directory multithreading")
@@ -54,9 +55,9 @@ class DirectoryManagerMultithreading:
             self.search_updates(self.root_directory)
 
             # look for any removals of files / directories
-            self.ftp[0].connect()
+            self.ftp.connect()
             self.any_removals()
-            self.ftp[0].disconnect()
+            self.ftp.disconnect()
 
             # wait before next synchronization
             time.sleep(frequency)
@@ -65,15 +66,15 @@ class DirectoryManagerMultithreading:
         # scan recursively all files & directories in the root directory
         for path_file, dirs, files in os.walk(directory):
             thread_id = 0 #used to select the ftp server for each thread
-            threads = [] * self.max_nb_threads 
+            threads = [" "] * self.max_nb_threads 
             for dir_name in dirs:
-                threads[thread_id] = threading.Thread(target = self.create_directory_multithreading, args = (path_file, dir_name, self.ftp[thread_id]))
+                threads[thread_id] = threading.Thread(target = self.create_directory_multithreading, args = (path_file, dir_name, self.ftp_multithreading[thread_id]))
                 threads[thread_id].start()
 
                 thread_id+=1
 
                 #if there are already max number of server, wait for all of them to finish
-                if(thread_id > self.max_nb_threads): 
+                if(thread_id >= self.max_nb_threads): 
                     for id in range(thread_id):
                         threads[id].join()
                     thread_id = 0
@@ -86,12 +87,12 @@ class DirectoryManagerMultithreading:
 
             thread_id = 0 
             for file_name in files:
-                threads[thread_id] = threading.Thread(target = self.update_or_create_file_multithreading, args = (path_file, file_name, self.ftp[thread_id]))
+                threads[thread_id] = threading.Thread(target = self.update_or_create_file_multithreading, args = (path_file, file_name, self.ftp_multithreading[thread_id]))
                 threads[thread_id].start()
 
                 thread_id+=1
 
-                if(thread_id > self.max_nb_threads):
+                if(thread_id >= self.max_nb_threads):
                     for id in range(thread_id):
                         threads[id].join()
                     thread_id = 0
@@ -152,21 +153,21 @@ class DirectoryManagerMultithreading:
                 if self.synchronize_dict[file_path].update_instance() == 1:
                     # file get updates
                     split_path = file_path.split(self.root_directory)
-                    srv_full_path = '{}{}'.format(self.ftp.directory, split_path[1])
-                    self.ftp.remove_file(srv_full_path)
+                    srv_full_path = '{}{}'.format(ftp.directory, split_path[1])
+                    ftp.remove_file(srv_full_path)
                     # update this file on the FTP server
-                    self.ftp.file_transfer(path_file, srv_full_path, file_name)
+                    ftp.file_transfer(path_file, srv_full_path, file_name)
 
             else:
 
                 # file get created
                 self.synchronize_dict[file_path] = File(file_path)
                 split_path = file_path.split(self.root_directory)
-                srv_full_path = '{}{}'.format(self.ftp.directory, split_path[1])
+                srv_full_path = '{}{}'.format(ftp.directory, split_path[1])
                 # add this file on the FTP server
-                self.ftp.file_transfer(path_file, srv_full_path, file_name)
+                ftp.file_transfer(path_file, srv_full_path, file_name)
         
-        #disconnect the server
+        #Disconnect the server
         ftp.disconnect()
 
     
@@ -187,13 +188,13 @@ class DirectoryManagerMultithreading:
                 # then use the appropriate methods to remove it from the FTP server
                 if isinstance(self.synchronize_dict[removed_path], File):
                     split_path = removed_path.split(self.root_directory)
-                    srv_full_path = '{}{}'.format(self.ftp[0].directory, split_path[1])
-                    self.ftp[0].remove_file(srv_full_path)
+                    srv_full_path = '{}{}'.format(self.ftp.directory, split_path[1])
+                    self.ftp.remove_file(srv_full_path)
                     self.to_remove_from_dict.append(removed_path)
 
                 elif isinstance(self.synchronize_dict[removed_path], Directory):
                     split_path = removed_path.split(self.root_directory)
-                    srv_full_path = '{}{}'.format(self.ftp[0].directory, split_path[1])
+                    srv_full_path = '{}{}'.format(self.ftp.directory, split_path[1])
                     self.to_remove_from_dict.append(removed_path)
                     # if it's a directory, we need to delete all the files and directories he contains
                     self.remove_all_in_directory(removed_path, srv_full_path, path_removed_list)
@@ -226,16 +227,16 @@ class DirectoryManagerMultithreading:
         # we iterate starting from the innermost file
         for i in range(len(sorted_containers)-1, -1, -1):
             for to_delete in sorted_containers[i]:
-                to_delete_ftp = "{0}{1}{2}".format(self.ftp[0].directory, os.path.sep, to_delete.split(self.root_directory)[1])
+                to_delete_ftp = "{0}{1}{2}".format(self.ftp.directory, os.path.sep, to_delete.split(self.root_directory)[1])
                 if isinstance(self.synchronize_dict[to_delete], File):
-                    self.ftp[0].remove_file(to_delete_ftp)
+                    self.ftp.remove_file(to_delete_ftp)
                     self.to_remove_from_dict.append(to_delete)
                 else:
                     # if it's again a directory, we delete all his containers also
                     self.remove_all_in_directory(to_delete, to_delete_ftp, path_removed_list)
         # once all the containers of the directory got removed
         # we can delete the directory also
-        self.ftp[0].remove_folder(srv_full_path)
+        self.ftp.remove_folder(srv_full_path)
         self.to_remove_from_dict.append(removed_directory)
 
     # subtract current number of os separator to the number of os separator for the root directory
