@@ -13,7 +13,7 @@ if __name__ == "__main__":
     # get parameters from command line
     ftp_website, local_directory, max_depth, refresh_frequency, is_multithreading, nb_threads, excluded_extensions = get_user_parameters()
 
-    # init directory manager with local directory and maximal depth
+    # init the correct directory manager with local directory and maximal depth using multithreading if it is asked
     if(is_multithreading):
         directory_manager = DirectoryManagerMultithreading(ftp_website, local_directory, max_depth, nb_threads, excluded_extensions)
     else:
