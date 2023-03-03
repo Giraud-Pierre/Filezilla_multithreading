@@ -103,7 +103,7 @@ class DirectoryManagerMultithreading:
         #Launch number_threads to update directories and files each with a ftp connection     
         threads = []
         for id in range(number_threads):
-            threads.append(threading.Thread(target = self.update_multithreading, args= (self.ftp_multithreading[id])))
+            threads.append(threading.Thread(target = self.update_multithreading, args= (self.ftp_multithreading[id],)))
             threads[id].start()
         
         for id in range(number_threads):
@@ -196,7 +196,7 @@ class DirectoryManagerMultithreading:
         #Launch the threads
         threads = []
         for id in range(nb_threads):
-            threads.append(threading.Thread(target = self.remove_multithreading, args= (self.ftp_multithreading[id])))
+            threads.append(threading.Thread(target = self.remove_multithreading, args= (self.ftp_multithreading[id],)))
             threads[id].start()
 
         for id in range(nb_threads):
