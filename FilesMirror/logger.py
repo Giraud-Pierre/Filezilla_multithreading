@@ -8,9 +8,9 @@ sys.path.append(os.path.realpath("tests/"))
 
 
 class Logger(object):
-    # We modified the path of the log.conf file because in some case, it would look for it
-    # in the directory where the console is and not where it actually is with the rest of
-    # the project files, which resulted in errors 
+    # We modified the path of the log.conf file because it would look for it in
+    # the directory where the console is, which in some cases might not be where
+    # it actually is with the rest of the project files, resulting in errors 
 
     @staticmethod
     def log_debug(msg):
