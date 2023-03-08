@@ -1,0 +1,63 @@
+2023-03-03 10:51:18,092 - root - INFO - logger : 22 - Valid parameters
+2023-03-03 10:51:18,149 - root - INFO - logger : 22 - Folder created : /test
+2023-03-03 10:51:18,231 - root - INFO - logger : 22 - File created / updated : srv /test/coucou.txt file coucou.txt
+2023-03-03 10:51:18,239 - root - INFO - logger : 22 - File created / updated : srv /test/coucou2.txt file coucou2.txt
+2023-03-03 10:51:18,265 - root - INFO - logger : 22 - File created / updated : srv /test/main.py file main.py
+2023-03-03 10:53:15,810 - root - INFO - logger : 22 - Valid parameters
+2023-03-03 10:53:15,867 - root - INFO - logger : 22 - Folder created : /test
+2023-03-03 10:53:15,931 - root - INFO - logger : 22 - File created / updated : srv /test/coucou2.txt file coucou2.txt
+2023-03-03 10:53:15,968 - root - INFO - logger : 22 - File created / updated : srv /test/coucou.txt file coucou.txt
+2023-03-03 10:53:15,971 - root - INFO - logger : 22 - File created / updated : srv /test/main.py file main.py
+2023-03-03 10:53:45,916 - root - WARNING - logger : 28 - File removed : /test/main.py -> error: 530 Please log in with USER and PASS first.
+2023-03-03 10:53:45,963 - root - INFO - logger : 22 - File removed : /test/coucou.txt
+2023-03-03 10:53:45,974 - root - WARNING - logger : 28 - File removed : /test/coucou2.txt -> error: 230 Login successful.
+2023-03-03 10:55:04,153 - root - INFO - logger : 22 - Valid parameters
+2023-03-03 10:55:04,219 - root - INFO - logger : 22 - Folder created : /test
+2023-03-03 10:55:04,284 - root - INFO - logger : 22 - File created / updated : srv /test/coucou.txt file coucou.txt
+2023-03-03 10:55:04,284 - root - INFO - logger : 22 - File created / updated : srv /test/coucou2.txt file coucou2.txt
+2023-03-03 10:55:04,287 - root - INFO - logger : 22 - File created / updated : srv /test/main.py file main.py
+2023-03-03 11:29:04,157 - root - INFO - logger : 25 - Valid parameters
+2023-03-03 11:29:04,219 - root - INFO - logger : 25 - Folder created : /test
+2023-03-03 11:54:03,424 - root - INFO - logger : 25 - Valid parameters
+2023-03-03 11:54:03,487 - root - INFO - logger : 25 - Folder created : /test
+2023-03-03 11:54:48,334 - root - INFO - logger : 25 - Valid parameters
+2023-03-03 11:54:48,396 - root - INFO - logger : 25 - Folder created : /test
+2023-03-03 11:54:48,588 - root - INFO - logger : 25 - File created / updated : srv /test/coucou2.txt file coucou2.txt
+2023-03-03 11:54:48,588 - root - INFO - logger : 25 - File created / updated : srv /test/main.py file main.py
+2023-03-03 11:54:48,588 - root - INFO - logger : 25 - File created / updated : srv /test/coucou.txt file coucou.txt
+2023-03-03 12:02:34,405 - root - INFO - logger : 25 - Valid parameters
+2023-03-03 12:02:34,458 - root - INFO - logger : 25 - Folder created : /test
+2023-03-03 12:02:34,641 - root - WARNING - logger : 31 - File created / updated : srv /test/coucou.txt file coucou.txt -> error on 
+2023-03-03 12:02:34,648 - root - INFO - logger : 25 - File created / updated : srv /test/coucou2.txt file coucou2.txt
+2023-03-03 12:02:34,650 - root - INFO - logger : 25 - File created / updated : srv /test/main.py file main.py
+2023-03-03 12:05:22,093 - root - INFO - logger : 25 - Valid parameters
+2023-03-03 12:05:22,154 - root - INFO - logger : 25 - Folder created : /test
+2023-03-03 12:05:22,338 - root - WARNING - logger : 31 - File created / updated : srv /test/coucou.txt file coucou.txt -> error on 'NoneType' object has no attribute 'sendall'
+2023-03-03 12:05:22,341 - root - WARNING - logger : 31 - File created / updated : srv /test/coucou2.txt file coucou2.txt -> error on 'NoneType' object has no attribute 'sendall'
+2023-03-03 12:08:09,443 - root - INFO - logger : 25 - Valid parameters
+2023-03-03 12:08:09,497 - root - INFO - logger : 25 - Folder created : /test
+2023-03-03 12:08:09,678 - root - WARNING - logger : 31 - File created / updated : srv /test/coucou.txt file coucou.txt -> error on I/O operation on closed file.
+2023-03-03 12:08:09,719 - root - WARNING - logger : 31 - File created / updated : srv /test/coucou2.txt file coucou2.txt -> error on 
+2023-03-03 12:08:09,719 - root - INFO - logger : 25 - File created / updated : srv /test/main.py file main.py
+2023-03-03 12:12:53,658 - root - INFO - logger : 25 - Valid parameters
+2023-03-03 12:12:53,764 - root - INFO - logger : 25 - Folder created : /test
+2023-03-03 12:12:53,973 - root - INFO - logger : 25 - File created / updated : srv /test/coucou2.txt file coucou2.txt
+2023-03-03 12:12:53,973 - root - WARNING - logger : 31 - File created / updated : srv /test/main.py file main.py -> error on 
+2023-03-03 12:12:53,978 - root - INFO - logger : 25 - File created / updated : srv /test/coucou.txt file coucou.txt
+2023-03-03 12:13:24,205 - root - INFO - logger : 25 - File removed : /test/main.py
+2023-03-03 12:13:54,411 - root - INFO - logger : 25 - File removed : /test/coucou.txt
+2023-03-03 12:13:54,420 - root - INFO - logger : 25 - File removed : /test/coucou2.txt
+2023-03-03 12:13:54,426 - root - WARNING - logger : 31 - File created / updated : srv /test/main.py file main.py -> error on 
+2023-03-03 12:15:55,266 - root - INFO - logger : 25 - File removed : /test/main.py
+2023-03-03 12:15:55,266 - root - INFO - logger : 25 - File removed : /test/coucou2.txt
+2023-03-03 12:15:55,274 - root - INFO - logger : 25 - File removed : /test/coucou.txt
+2023-03-03 12:16:25,478 - root - INFO - logger : 25 - File removed : /test/coucou.txt
+2023-03-03 12:16:25,480 - root - INFO - logger : 25 - File removed : /test/coucou2.txt
+2023-03-03 12:16:25,486 - root - INFO - logger : 25 - File removed : /test/main.py
+2023-03-03 13:08:50,326 - root - INFO - logger : 25 - Valid parameters
+2023-03-03 13:08:50,375 - root - INFO - logger : 25 - Folder created : /test
+2023-03-03 13:10:41,813 - root - INFO - logger : 25 - Valid parameters
+2023-03-03 13:10:41,868 - root - INFO - logger : 25 - Folder created : /test
+2023-03-03 13:10:41,903 - root - INFO - logger : 25 - File created / updated : srv /test/coucou.txt file coucou.txt
+2023-03-03 13:10:41,911 - root - INFO - logger : 25 - File created / updated : srv /test/coucou2.txt file coucou2.txt
+2023-03-03 13:10:41,919 - root - INFO - logger : 25 - File created / updated : srv /test/main.py file main.py

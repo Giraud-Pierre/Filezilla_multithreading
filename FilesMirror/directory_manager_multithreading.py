@@ -33,6 +33,9 @@ class DirectoryManagerMultithreading:
         # FTP instances
         self.ftp = TalkToFTP(ftp_website)
         self.ftp_multithreading = [TalkToFTP(ftp_website) for _ in range(nb_threads)]
+        # Number of ftp instances already connected (used to open more ftp servers
+        # for the removals if not enough were open during the updates )
+        self.ftp_connected = 0
         #Create Queue for multithreading
         self.queue_files = queue.Queue() #Queue of files to add or update
         self.queue_directories = queue.Queue() #Queue of directories to add
@@ -67,6 +70,9 @@ class DirectoryManagerMultithreading:
             self.queue_directories.empty()
             self.queue_files.empty()
             self.queue_to_remove.empty()
+
+            # There are no ftp connected currently
+            self.ftp_connected = 0
 
             # search for an eventual updates of files in the root directory
             print("start searching")
@@ -106,6 +112,10 @@ class DirectoryManagerMultithreading:
             threads.append(threading.Thread(target = self.update_multithreading, args= (self.ftp_multithreading[id],)))
             threads[id].start()
         
+        # Each threads opened one ftp server so we store the number of ftp server opened 
+        self.ftp_connected = number_threads
+
+        # waiting for all threads to finish before moving on
         for id in range(number_threads):
             threads[id].join()
 
@@ -172,8 +182,6 @@ class DirectoryManagerMultithreading:
 
             time.sleep(0)
         
-        #disconnect the server
-        ftp.disconnect()
 
     
     def any_removals(self):
@@ -193,12 +201,25 @@ class DirectoryManagerMultithreading:
         if(nb_threads > self.queue_to_remove.qsize()):
             nb_threads = self.queue_to_remove.qsize()
 
+        # Verify that there are neither too many or not enough ftp servers connected
+        if(nb_threads != self.ftp_connected):
+            if(nb_threads > self.ftp_connected):
+                # if there are not enough ftp servers, launch others
+                for server_id in range(self.ftp_connected, nb_threads):
+                    self.ftp_multithreading[server_id].connect()
+            if(nb_threads < self.ftp_connected):
+                # if there are too many, disconnect the unnecessary ones
+                for server_id in range(nb_threads, self.ftp_connected):
+                    self.ftp_multithreading[server_id].disconnect()
+
+
         #Launch the threads
         threads = []
         for id in range(nb_threads):
             threads.append(threading.Thread(target = self.remove_multithreading, args= (self.ftp_multithreading[id],)))
             threads[id].start()
 
+        # waiting for all threads to finish before moving on
         for id in range(nb_threads):
             threads[id].join()
         
@@ -209,9 +230,6 @@ class DirectoryManagerMultithreading:
                 del self.synchronize_dict[to_remove]
     
     def remove_multithreading(self, ftp):
-        #Connect to the ftp Server
-        ftp.connect()
-
         while(self.queue_to_remove.qsize() > 0):
             removed_path = self.queue_to_remove.get()
 
