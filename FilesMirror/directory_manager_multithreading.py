@@ -33,21 +33,23 @@ class DirectoryManagerMultithreading:
         # FTP instances
         self.ftp = TalkToFTP(ftp_website)
         self.ftp_multithreading = [TalkToFTP(ftp_website) for _ in range(nb_threads)]
-        #Create Queue for multithreading
+        # Create Queue for multithreading
         self.queue_files = queue.Queue() #Queue of files to add or update
         self.queue_directories = queue.Queue() #Queue of directories to add
         self.queue_to_remove = queue.Queue() #Queue of directories or files to remove    
-        #List to store the threads
+        # List to store the threads
         self.threads_updater = [threading.Thread(target = self.update_multithreading, 
                                                  args= (self.ftp_multithreading[id],)) 
                                                  for id in range(self.max_nb_threads)]
         self.threads_remover = [threading.Thread(target = self.remove_multithreading, 
                                                  args= (self.ftp_multithreading[id],)) 
                                                  for id in range(self.max_nb_threads)]
-        #Launch the threads updaters to update directories and files each with a ftp connection     
+        # Launch the threads updaters to update directories and files each with a ftp connection
+        # They will always be running, waiting for files or directories to create or update      
         for id in range(self.max_nb_threads):
             self.threads_updater[id].start()
-        #Launch the threads removers
+        # Launch the threads removers
+        # They will always be running, waiting for files or directories to delete
         for id in range(self.max_nb_threads):
             self.threads_remover[id].start()
             
@@ -121,13 +123,15 @@ class DirectoryManagerMultithreading:
                 file_full_path = os.path.join(file_path, file_name)
                 self.queue_files.put([file_path,file_name,file_full_path])        
 
-        while(self.queue_directories.qsize() > 0 and self.queue_files.qsize() > 0):
+        # Wait for the end of the update / creation process
+        while(self.queue_directories.qsize() > 0 or self.queue_files.qsize() > 0):
             time.sleep(1e-3)
 
 
     def update_multithreading(self, ftp):
         
         while(True):
+            # Do tasks only if directories to be added have been detected
             if(self.queue_directories.qsize() > 0):
                 #Get the next path to update
                 directory_path = self.queue_directories.get()
@@ -153,6 +157,7 @@ class DirectoryManagerMultithreading:
                             # add this directory to the FTP server
                             ftp.create_folder(srv_full_path)
 
+            # Do tasks only if files to be added  or updated have been detected
             elif(self.queue_files.qsize() > 0):
 
                 #Get the next file to update
@@ -185,7 +190,7 @@ class DirectoryManagerMultithreading:
                         # add this file on the FTP server
                         ftp.file_transfer(file_path, srv_full_path, file_name)
 
-            time.sleep(0)
+            time.sleep(1e-4)
 
     
     def any_removals(self):
@@ -201,6 +206,7 @@ class DirectoryManagerMultithreading:
                 self.path_removed_list.append(path)
                 self.queue_to_remove .put(path)
 
+        # Wait for the end of the deletion process
         while(self.queue_to_remove.qsize() > 0):
             time.sleep(1e-3)
 
@@ -212,6 +218,7 @@ class DirectoryManagerMultithreading:
     
     def remove_multithreading(self, ftp):
         while(True):
+            # Do task only if files or directories to be removed have been detected
             if(self.queue_to_remove.qsize() > 0):             
                 removed_path = self.queue_to_remove.get()
 
@@ -233,7 +240,7 @@ class DirectoryManagerMultithreading:
                         # if it's a directory, we need to delete all the files and directories he contains
                         self.remove_all_in_directory(removed_path, srv_full_path, self.path_removed_list, ftp)
 
-            time.sleep(0)
+            time.sleep(1e-4)
 
     def remove_all_in_directory(self, removed_directory, srv_full_path, path_removed_list, ftp):
         directory_containers = {}
