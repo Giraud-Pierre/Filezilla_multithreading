@@ -283,7 +283,7 @@ class DirectoryManagerMultithreading:
                     self.to_remove_from_dict.append(to_delete)
                 else:
                     # if it's again a directory, we delete all his containers also
-                    self.remove_all_in_directory(to_delete, to_delete_ftp, path_removed_list)
+                    self.remove_all_in_directory(to_delete, to_delete_ftp, path_removed_list, ftp)
         # once all the containers of the directory got removed
         # we can delete the directory also
         ftp.remove_folder(srv_full_path)
