@@ -95,13 +95,10 @@ class DirectoryManagerMultithreading:
                 self.ftp_multithreading[id].connect()
 
             # search for an eventual updates of files in the root directory
-            print("start searching")
             self.search_updates(self.root_directory)
 
             # look for any removals of files / directories
-            print("start removing")
             self.any_removals()
-            print("end removing")
 
             #End all the ftp connections
             self.ftp.disconnect()
@@ -219,8 +216,6 @@ class DirectoryManagerMultithreading:
         # Wait for the end of the deletion process
         while(self.queue_to_remove.qsize() > 0 or True in self.remover_isrunning):
             time.sleep(1e-3)
-            print(self.queue_to_remove.qsize())
-            print(self.remover_isrunning)
 
         # all the files / directories deleted in the local directory need to be deleted
         # from the dictionary use to synchronize
@@ -248,13 +243,11 @@ class DirectoryManagerMultithreading:
                         self.to_remove_from_dict.append(removed_path)
 
                     elif isinstance(self.synchronize_dict[removed_path], Directory):
-                        print("directory")
                         split_path = removed_path.split(self.root_directory)
                         srv_full_path = '{}{}'.format(ftp.directory, split_path[1])
                         self.to_remove_from_dict.append(removed_path)
                         # if it's a directory, we need to delete all the files and directories he contains
                         self.remove_all_in_directory(removed_path, srv_full_path, self.path_removed_list, ftp)
-                        print("endirectory")
 
                 self.remover_isrunning[id] = False
             time.sleep(1e-4)
@@ -287,7 +280,7 @@ class DirectoryManagerMultithreading:
                     self.to_remove_from_dict.append(to_delete)
                 else:
                     # if it's again a directory, we delete all his containers also
-                    self.remove_all_in_directory(to_delete, to_delete_ftp, path_removed_list)
+                    self.remove_all_in_directory(to_delete, to_delete_ftp, path_removed_list, ftp)
         # once all the containers of the directory got removed
         # we can delete the directory also
         ftp.remove_folder(srv_full_path)
