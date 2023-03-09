@@ -1,6 +1,6 @@
 # Filezilla_multithreading
 
-            Contexte du projet :
+##Contexte du projet :
 
 Le projet consiste à l'implémentation d’un mécanisme de multiprogramming sur un projet de synchronisation de de dossier en passant par une connexion ftp sur un serveur filezilla. Les différente méthodes possibles sont :
  - Du multi-threading
@@ -10,7 +10,7 @@ Le projet consiste à l'implémentation d’un mécanisme de multiprogramming su
 Notre choix s'est porté sur le multithreading pour sa simplicité et sa flexibilité.
 
 
-            Comment utiliser le logiciel:
+##Comment utiliser le logiciel:
  - Téléchargez le projet sur le github sur  la branche main (au format zip)
  - Décompressez le projet
  - Lancez votre serveur
